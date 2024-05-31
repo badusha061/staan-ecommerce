@@ -5,4 +5,5 @@ urlpatterns = [
     path('cart/<int:user_id>/', CreateCart.as_view(), name='create-cart'),
     path('cart/update/<int:user_id>/', UpdateCart.as_view(), name='create-cart'),
     path('list/cart/<int:user_id>/', ListCart.as_view(), name='create-cart'),
+    path('delete/cart/<int:cart_id>/', ListCart.as_view(), name='create-cart'),
 ]

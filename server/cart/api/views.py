@@ -97,6 +97,7 @@ class UpdateCart(APIView):
                     }
                     return Response(status= HTTP_400_BAD_REQUEST , data=message)
                 cart_instance.quantity = user_quantity + 1 
+                cart_instance.total_price = user_total_price + product_instace.price
                 cart_instance.save()
                 message= {
                     "message":"Successully Updated Cart"
@@ -104,15 +105,31 @@ class UpdateCart(APIView):
                 return Response(status= HTTP_200_OK , data= message )
             elif user_action == 'decrease':
                 user_quantity = cart_instance.quantity 
+                user_total_price = cart_instance.total_price
                 if user_quantity == 1:
                     message = {
                         "message":"Qunitity is One cannot be change"
                     }
                     return Response(status= HTTP_400_BAD_REQUEST , data=message)
                 cart_instance.quantity = user_quantity - 1 
+                cart_instance.total_price = user_total_price + product_instace.price
                 cart_instance.save()
 
                 message= {
                     "message":"Successully Updated Cart"
                 }
                 return Response(status= HTTP_200_OK ,data= message)
+            
+class DeleteCartItem(APIView):
+    def delete(self,request,cart_id):
+        try:
+            CartItem.objects.get(id = cart_id).delete()
+            message = {
+                "message":"Successfully Deleted Cart Item"
+            }
+            return Response(status=HTTP_200_OK , data= message) 
+        except Exception as e:
+            messsage = {
+                
+            }
+            return Response(status=HTTP_400_BAD_REQUEST)
