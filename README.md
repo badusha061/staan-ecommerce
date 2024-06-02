@@ -43,7 +43,7 @@
 
 1. **Clone the repository:**
     ```sh
-    git clone https://github.com/badusha061/staan-ecommerce-.git
+    git clone https://github.com/badusha061/staan-ecommerce.git
     ```
 
 2. **Navigate to the project folder for backend:**
