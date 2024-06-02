@@ -431,7 +431,7 @@ export default function Products() {
                           {data.name}
                         </TableCell>
                         <TableCell className="hidden md:table-cell">
-                            ${data.price}
+                            ₹{data.price}
                         </TableCell>
                         <TableCell className="hidden md:table-cell">
                           {data.quantity}

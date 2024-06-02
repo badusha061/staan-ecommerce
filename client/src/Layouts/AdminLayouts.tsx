@@ -1,4 +1,4 @@
-import { Link } from "react-router-dom"
+import { Link, useNavigate } from "react-router-dom"
 import {
   Home,
   Package,
@@ -34,8 +34,32 @@ import {
   TooltipContent,
   TooltipTrigger,
 } from "@/components/ui/tooltip"
+import Swal from 'sweetalert2';
+import useUserStore from "@/app/Store"
 
 function AdminLayouts({children}) {
+  const navigate = useNavigate()
+  const removeUser = useUserStore((user) => user.removeUser)
+  const handleLogout = () => {
+    removeUser()
+        const Toast = Swal.mixin({
+            toast: true,
+            position: "top-end",
+            showConfirmButton: false,
+            timer: 3000,
+            timerProgressBar: true,
+            didOpen: (toast) => {
+              toast.onmouseenter = Swal.stopTimer;
+              toast.onmouseleave = Swal.resumeTimer;
+            }
+          });
+          Toast.fire({
+            icon: "success",
+            title: "Successfully Logout Admin"
+          });
+        navigate('/login')     
+  }  
+
   return (
     <div className="flex min-h-screen w-full flex-col bg-muted/40">
       
@@ -168,23 +192,8 @@ function AdminLayouts({children}) {
   </SheetContent>
 </Sheet>
 <Breadcrumb className="hidden md:flex">
-  <BreadcrumbList>
-    <BreadcrumbItem>
-      <BreadcrumbLink asChild>
-        <Link to='/admin' >Dashboard</Link>
-      </BreadcrumbLink>
-    </BreadcrumbItem>
-    <BreadcrumbSeparator />
-    <BreadcrumbItem>
-      <BreadcrumbLink asChild>
-        <Link to='/orders'>Orders</Link>
-      </BreadcrumbLink>
-    </BreadcrumbItem>
-    <BreadcrumbSeparator />
-    <BreadcrumbItem>
-      <BreadcrumbPage>Recent Orders</BreadcrumbPage>
-    </BreadcrumbItem>
-  </BreadcrumbList>
+  <h1 className="text-2xl font-extrabold dark:text-white">STAAN<small className="ms-2 font-semibold text-gray-500 dark:text-gray-400">Bio-Med Engineering Private Limitedt</small></h1>
+
 </Breadcrumb>
 <div className="relative ml-auto flex-1 md:grow-0">
   <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
@@ -216,7 +225,7 @@ function AdminLayouts({children}) {
     <DropdownMenuItem>Settings</DropdownMenuItem>
     <DropdownMenuItem>Support</DropdownMenuItem>
     <DropdownMenuSeparator />
-    <DropdownMenuItem>Logout</DropdownMenuItem>
+    <DropdownMenuItem onClick={handleLogout} >Logout</DropdownMenuItem>
   </DropdownMenuContent>
 </DropdownMenu>
 </header>

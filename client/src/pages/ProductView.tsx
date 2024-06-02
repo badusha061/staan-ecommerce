@@ -1,10 +1,15 @@
 import UserLayouts from '@/Layouts/UserLayouts'
 import { useEffect, useState } from 'react'
-import { useLocation } from 'react-router-dom'
+import { useLocation, useNavigate } from 'react-router-dom'
 import { products } from '@/types/database'
 import axios from 'axios'
+import useUserStore from '@/app/Store';
+import Swal from 'sweetalert2';
+import {User} from '../types/database'
 
 function ProductView() {
+    const navigate = useNavigate()
+    const userDetails : User  = useUserStore((user) => user.user)
     const [data , setData] = useState<products[]>([])
     const location = useLocation()
     const searchParams = new URLSearchParams(location.search)
@@ -31,7 +36,50 @@ function ProductView() {
         }
     }
 
-
+    const CreateCart = async (product : number) => {
+        try{
+          const response = await axios.post(`${BASE_URL}/api/cart/${userDetails.id}/`,{"product":product})
+          if(response.status === 201){
+            const Toast = Swal.mixin({
+              toast: true,
+              position: "top-end",
+              showConfirmButton: false,
+              timer: 3000,
+              timerProgressBar: true,
+              didOpen: (toast) => {
+                toast.onmouseenter = Swal.stopTimer;
+                toast.onmouseleave = Swal.resumeTimer;
+              }
+            });
+            Toast.fire({
+              icon: "success",
+              title: "Successfully Added Into Cart"
+            });
+            navigate('/cart')
+          }
+        }catch(error){
+          if(error.response.status === 400){
+            const Toast = Swal.mixin({
+              toast: true,
+              position: 'top-end',
+              showConfirmButton: false,
+              timer: 3000,
+              timerProgressBar: true,
+              didOpen: (toast) => {
+                toast.onmouseenter = Swal.stopTimer;
+                toast.onmouseleave = Swal.resumeTimer;
+              },
+              
+            });
+            
+            Toast.fire({
+              icon: 'error',
+              title: "Product is already in the cart",
+            });
+            return false
+          }
+        }
+      }
     
     
   return (
@@ -48,7 +96,7 @@ function ProductView() {
                 </div>
                 <div className="flex -mx-2 mb-4">
                     <div className="w-1/2 px-2">
-                        <button className="w-full bg-gray-900 dark:bg-gray-600 text-white py-2 px-4 rounded-full font-bold hover:bg-gray-800 dark:hover:bg-gray-700">Add to Cart</button>
+                        <button onClick={() => CreateCart(data.id)} className="w-full bg-gray-900 dark:bg-gray-600 text-white py-2 px-4 rounded-full font-bold hover:bg-gray-800 dark:hover:bg-gray-700">Add to Cart</button>
                     </div>
                     <div className="w-1/2 px-2">
                         <button className="w-full bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-white py-2 px-4 rounded-full font-bold hover:bg-gray-300 dark:hover:bg-gray-600">Add to Wishlist</button>
@@ -63,7 +111,7 @@ function ProductView() {
                 <div className="flex mb-4">
                     <div className="mr-4">
                         <span className="font-bold text-gray-700 dark:text-gray-300">Price:</span>
-                        <span className="text-gray-600 dark:text-gray-300">${data.price}</span>
+                        <span className="text-gray-600 dark:text-gray-300">₹{data.price}</span>
                     </div>
                     <div>
                         <span className="font-bold text-gray-700 dark:text-gray-300">Availability:</span>

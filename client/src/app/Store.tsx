@@ -1,20 +1,26 @@
-// import { create } from 'zustand';
-// import { devtools, persist } from 'zustand/middleware';
-// import { User , Jwt } from '../types/database';
+import { create } from 'zustand';
+import { User } from '../types/database';
+import { devtools, persist } from 'zustand/middleware';
 
+interface UserStoreState {
+    user: User | null;
+    setUser: (payload: User) => void;
+    removeUser: () => void;
+}
 
-// const useUserStore = create<User>(
-//   devtools(
-//     persist(
+const useUserStore = create<UserStoreState>()(
+    devtools(
+        persist(
+            (set) => ({
+                user: null,
+                setUser: (payload: User) => set(() => ({ user: payload })),
+                removeUser: () => set(() => ({ user: null })),
+            }),
+            {
+                name: 'userStore',
+            }
+        )
+    )
+);
 
-//         (set) => ({
-//             user : User | null,
-//             addUser : set
-//         })
-
-      
-//     )
-//   )
-// );
-
-// export default useUserStore;
+export default useUserStore;

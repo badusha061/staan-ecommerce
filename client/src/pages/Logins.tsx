@@ -17,8 +17,8 @@ import axios from "axios";
 import { jwtDecode } from "jwt-decode";
 import Swal from 'sweetalert2';
 import UserLayouts from "@/Layouts/UserLayouts";
-
-
+import useUserStore from "@/app/Store";
+import {User} from '../types/database'
 
 const formSchema = z.object({
   username: z.string().min(2, {
@@ -28,6 +28,7 @@ const formSchema = z.object({
 })
 
 export default  function Login() {
+  const useStore = useUserStore()
   const navigate = useNavigate()
   const BASE_URL = import.meta.env.VITE_REACT_APP_BASE_URL;
   const form = useForm<z.infer<typeof formSchema>>({
@@ -47,7 +48,15 @@ export default  function Login() {
         const response = await axios.post(`${BASE_URL}/api/token`,values)
         if(response.status === 200){
           const decoded_access = jwtDecode(response.data?.access);
+    
           if(decoded_access?.is_admin === true){
+            const user : User ={
+              id : decoded_access?.user_id,
+              username: decoded_access?.username,
+              is_admin: decoded_access?.is_admin,
+              email: decoded_access?.email
+            }
+            useStore.setUser(user)
               navigate('/admin')
               const Toast = Swal.mixin({
                 toast: true,
@@ -65,6 +74,13 @@ export default  function Login() {
                 title: "Successfully Logined Admin"
               });
           }else{
+            const user : User ={
+              id : decoded_access?.user_id,
+              username: decoded_access?.username,
+              is_admin: decoded_access?.is_admin,
+              email: decoded_access?.email
+            }
+            useStore.setUser(user)
             const Toast = Swal.mixin({
               toast: true,
               position: "top-end",
@@ -84,6 +100,7 @@ export default  function Login() {
           }   
         }
       }catch(error){
+        console.log(error);
         const Toast = Swal.mixin({
           toast: true,
           position: 'top-end',
@@ -170,7 +187,7 @@ export default  function Login() {
       </div>
       <div className="hidden bg-muted lg:block">
         <img
-          src="https://www.staan.in/wp-content/uploads/2016/09/mission1.jpg"
+          src="https://img.freepik.com/free-vector/ordering-goods-online-internet-store-online-shopping-niche-e-commerce-website-mother-buying-babies-clothes-footwear-toys-infant-accessories-vector-isolated-concept-metaphor-illustration_335657-2764.jpg"
           alt="Image"
           width="1920"
           height="1080"

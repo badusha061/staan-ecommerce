@@ -199,7 +199,7 @@ function Register() {
       </div>
       <div className="hidden bg-muted lg:block">
         <img
-          src="https://www.staan.in/wp-content/uploads/2016/09/mission1.jpg"
+          src="https://img.freepik.com/free-vector/ordering-goods-online-internet-store-online-shopping-niche-e-commerce-website-mother-buying-babies-clothes-footwear-toys-infant-accessories-vector-isolated-concept-metaphor-illustration_335657-2764.jpg"
           alt="Image"
           width="1920"
           height="1080"

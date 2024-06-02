@@ -4,6 +4,8 @@ from product.models import Category , Product
 from  .serializers import CategorySerializer , ProductSerailzer , ProductSerailzers
 from rest_framework.decorators import permission_classes
 from rest_framework.permissions import  IsAdminUser
+from rest_framework import filters
+
 
 
 
@@ -33,9 +35,11 @@ class UpdateDestoryRetriveCategory(RetrieveUpdateDestroyAPIView):
 
 # @permission_classes([IsAdminUser])
 class CreateListProducts(ListCreateAPIView):
-    queryset = Product.objects.all()
     serializer_class  =  ProductSerailzers
     pagination_class = ProductSetPagination
+    queryset = Product.objects.all().order_by('id')
+    filter_backends = [filters.SearchFilter]
+    search_fields = ['name']     
 
 
 # @permission_classes([IsAdminUser])

@@ -29,3 +29,30 @@ export interface products{
     quantity:number
     category:category
 }
+
+export interface Cart{
+    id: number,
+    product:products,
+    user: User,
+    quantity:number,
+    total_price:number,
+    date_added: string
+}
+
+export interface Order{
+    id : number,
+    user:User,
+    created_at:string,
+    total_price:number,
+    status:string,
+    razorpay_order_id:string,
+    address:string,  
+}
+
+export interface OrderItem{
+    id:number,
+    order:Order,
+    product:products,
+    quantity:number,
+    price:number
+}
